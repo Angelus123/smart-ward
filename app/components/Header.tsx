@@ -1,216 +1,247 @@
-'use client'; // This directive is crucial for client-side components in Next.js App Router
-
+'use client';
 import Link from 'next/link';
-import React,  { useState } from 'react';
-
+import { usePathname } from 'next/navigation';
+import React, { useState } from 'react';
 import {
+  Home,
   Info,
-  Settings,
-  Mail,
-  Handshake,
-  Home as HomeIcon, 
-} from 'lucide-react'; 
+  BookOpen,
+  Headphones,
+  ShoppingCart,
+  LogIn,
+  UserPlus,
+  Sun,
+  Moon
+} from 'lucide-react';
 
-// Define the iconMap using Lucide React components
-const iconMap: Record<string, React.ReactElement> = {
-  home: React.createElement(HomeIcon, { className: "w-4 h-4" }),
-  info: React.createElement(Info, { className: "w-4 h-4" }),
-  settings: React.createElement(Settings, { className: "w-4 h-4" }),
-  mail: React.createElement(Mail, { className: "w-4 h-4" }),
-  handshake: React.createElement(Handshake, { className: "w-4 h-4" }),
+const iconMap = {
+  home: <Home className="w-4 h-4" />,
+  info: <Info className="w-4 h-4" />,
+  documentation: <BookOpen className="w-4 h-4" />,
+  support: <Headphones className="w-4 h-4" />,
+  buy: <ShoppingCart className="w-4 h-4" />,
+  login: <LogIn className="w-4 h-4" />,
+  signup: <UserPlus className="w-4 h-4" />
 };
 
-// Define the types for the Header component's props
 interface HeaderProps {
-  theme: 'light' | 'dark'; // Theme can only be 'light' or 'dark'
-  setTheme: (theme: 'light' | 'dark') => void; // Function to set the theme
+  theme: 'light' | 'dark';
+  setTheme: (theme: 'light' | 'dark') => void;
 }
 
 export default function Header({ theme, setTheme }: HeaderProps) {
-  // State to control the visibility of the mobile menu
   const [isMenuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
 
-  // Function to toggle the mobile menu's open/close state
-  const toggleMenu = () => {
-    setMenuOpen(!isMenuOpen);
-  };
+  const navItems = [
+    { href: '/', icon: 'home', text: 'Home' },
+    { href: '/about', icon: 'info', text: 'About' },
+    { href: '/documentation', icon: 'documentation', text: 'Docs' },
+    { href: '/support', icon: 'support', text: 'Support' },
+    { href: '/buy', icon: 'buy', text: 'Purchase' }
+  ];
+
+  const isActive = (href: string) => pathname === href;
 
   return (
     <>
-      {/* Header Section */}
-      <header
-        className={`fixed w-full top-0 z-50 shadow-md py-5 px-8 transition-colors duration-300 ${theme === 'dark' ? 'bg-gray-900/95 text-white' : 'bg-white/95 text-gray-800'
-          }`}
-      >
-        <div className="max-w-7xl mx-auto px-5 flex justify-between items-center">
-          {/* Logo and Site Title */}
+      <header className={`fixed w-full top-0 z-50 py-3 transition-colors duration-300 ${
+        theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-gray-800'
+      } shadow-sm`}>
+        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+          {/* Logo */}
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-blue-400 backdrop-blur border border-white/20 rounded-full flex items-center justify-center shadow">
-              {/* ShieldSync Logo SVG */}
-              <img src="/logo.png" alt="Logo" />
+            <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
+              theme === 'dark' ? 'bg-blue-900/80' : 'bg-blue-100'
+            }`}>
+              <img src="/logo.png" alt="Logo" className="w-5 h-5" />
             </div>
-            <div
-              className={`
-                          hidden sm:block
-                          text-3xl font-bold
-                          bg-gradient-to-r
-                          ${theme === 'dark' ? 'from-[#93c5fd] to-[#3b82f6]' : 'from-[#0a1f44] to-[#2a5a9c]'}
-                          bg-clip-text text-transparent
-                        `}
-            >
+            <span className={`hidden sm:block text-xl font-semibold ${
+              theme === 'dark' ? 'text-blue-300' : 'text-blue-600'
+            }`}>
               SmartWard
-            </div>
+            </span>
           </div>
 
-          {/* Desktop Navigation - Hidden on small screens */}
+          {/* Desktop Navigation */}
           <nav className="hidden md:block">
-            <ul className="flex space-x-8">
-              {[
-                { href: '/', icon: 'home', text: 'Home' },
-                { href: '/about', icon: 'info', text: 'About' },
-                { href: '/documentation', icon: 'mail', text: 'Documentation' },
-                { href: '/support', icon: 'settings', text: 'Support' },
-                { href: '/buy', icon: 'handshake', text: 'buy' },
-              ].map((item) => (
+            <ul className="flex space-x-1">
+              {navItems.map((item) => (
                 <li key={item.href}>
-                  {/* Corrected Link usage: className directly on Link */}
                   <Link
                     href={item.href}
-                    className={`transition flex items-center gap-2 hover:${theme === 'dark' ? 'text-gray-300' : 'text-blue-400'
-                      } ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}
+                    className={`relative flex items-center gap-2 px-4 py-2 rounded-md transition-all ${
+                      isActive(item.href)
+                        ? theme === 'dark'
+                          ? 'text-blue-300 font-medium'
+                          : 'text-blue-600 font-medium'
+                        : theme === 'dark'
+                          ? 'text-gray-300 hover:text-blue-300'
+                          : 'text-gray-600 hover:text-blue-600'
+                    }`}
                   >
-                    <span className="text-sm">{iconMap[item.icon]}</span>
-                    {item.text}
+                    {iconMap[item.icon as keyof typeof iconMap]}
+                    <span>{item.text}</span>
+                    {isActive(item.href) && (
+                      <span className={`absolute -bottom-1 left-1/2 -translate-x-1/2 w-4/5 h-0.5 rounded-full ${
+                        theme === 'dark' ? 'bg-blue-400' : 'bg-blue-500'
+                      }`}></span>
+                    )}
                   </Link>
                 </li>
               ))}
             </ul>
           </nav>
 
-          {/* Mobile Menu Button (Hamburger) and Mobile Theme Toggle - Visible on small screens */}
-          <div className="flex items-center md:hidden">
-            <button
-              onClick={toggleMenu}
-              className="p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-400"
-              aria-label="Toggle menu"
+          {/* Desktop Auth Buttons */}
+          <div className="hidden md:flex items-center gap-2">
+            <Link
+              href="/login"
+              className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm ${
+                theme === 'dark'
+                  ? 'text-gray-300 hover:bg-gray-800'
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
             >
-              <svg
-                className={`w-6 h-6 transition-all duration-300 ${theme === 'dark' ? 'text-white' : 'text-gray-800'
-                  }`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                {/* Dynamically render hamburger lines or close icon */}
-                {isMenuOpen ? (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M6 18L18 6M6 6l12 12" // X icon
-                  />
-                ) : (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 6h16M4 12h16M4 18h16" // 3 lines
-                  />
-                )}
-              </svg>
-            </button>
-            {/* Mobile Theme Toggle */}
+              {iconMap.login}
+              <span>Login</span>
+            </Link>
+            <Link
+              href="/signup"
+              className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm ${
+                theme === 'dark'
+                  ? 'bg-blue-700 hover:bg-blue-600 text-white'
+                  : 'bg-blue-600 hover:bg-blue-500 text-white'
+              }`}
+            >
+              {iconMap.signup}
+              <span>Sign Up</span>
+            </Link>
             <button
-              className="w-10 h-10 rounded-full cursor-pointer bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-white hover:bg-blue-400 hover:text-white flex items-center justify-center transition-all duration-300 ml-2"
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700"
               aria-label="Toggle theme"
             >
-              {theme === 'dark' ? '☀️' : '🌙'}
+              {theme === 'dark' ? (
+                <Sun className="w-5 h-5 text-yellow-300" />
+              ) : (
+                <Moon className="w-5 h-5 text-gray-600" />
+              )}
             </button>
           </div>
 
-          {/* Desktop Login/Register/Theme Toggle - Hidden on small screens */}
-          <div className="hidden md:flex items-center gap-4">
-            {/* Corrected Link usage */}
-            <Link
-              href="/login"
-              className="px-6 py-2 rounded-full font-semibold border-2 border-blue-400 text-blue-400 hover:border-transparent hover:bg-[linear-gradient(135deg,#4a9af9_0%,#3a7ad9_100%)] hover:text-white transition-all duration-300"
-            >
-              Login
-            </Link>
-            {/* Corrected Link usage */}
-            <Link
-              href="/signup"
-              className="px-6 py-2 rounded-full font-semibold text-white hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
-              style={{
-                background: 'linear-gradient(135deg, #4a9af9 0%, #3a7ad9 100%)',
-              }}
-            >
-              Register
-            </Link>
+          {/* Mobile Menu Button */}
+          <div className="flex md:hidden items-center gap-2">
             <button
-              className="w-10 h-10 rounded-full cursor-pointer bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-white hover:bg-blue-400 hover:text-white flex items-center justify-center transition-all duration-300"
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700"
               aria-label="Toggle theme"
             >
-              {theme === 'dark' ? '☀️' : '🌙'}
+              {theme === 'dark' ? (
+                <Sun className="w-5 h-5" />
+              ) : (
+                <Moon className="w-5 h-5" />
+              )}
+            </button>
+            <button
+              onClick={() => setMenuOpen(!isMenuOpen)}
+              className="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700"
+              aria-label="Toggle menu"
+            >
+              <div className="space-y-1.5">
+                <span className={`block w-6 h-0.5 rounded-full transition-all ${
+                  theme === 'dark' ? 'bg-white' : 'bg-gray-800'
+                } ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
+                <span className={`block w-6 h-0.5 rounded-full ${
+                  theme === 'dark' ? 'bg-white' : 'bg-gray-800'
+                } ${isMenuOpen ? 'opacity-0' : 'opacity-100'}`}></span>
+                <span className={`block w-6 h-0.5 rounded-full transition-all ${
+                  theme === 'dark' ? 'bg-white' : 'bg-gray-800'
+                } ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
+              </div>
             </button>
           </div>
         </div>
       </header>
 
-      {/* Mobile Menu Overlay/Drawer */}
-      <nav
-        className={`fixed top-0 left-0 w-full h-full z-40 p-8 pt-24 transform transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'
-          } ${theme === 'dark' ? 'bg-gray-900/95' : 'bg-white/95'} backdrop-blur-sm md:hidden`}
-      >
-        <ul className="flex flex-col space-y-6 text-xl">
-          {[
-            { href: '/', icon: 'home', text: 'Home' },
-            { href: '/about', icon: 'info', text: 'About' },
-            { href: '/services', icon: 'settings', text: 'Services' },
-            { href: '/contact', icon: 'mail', text: 'Contact' },
-            { href: '/partners', icon: 'handshake', text: 'Partners' },
-          ].map((item) => (
-            <li key={item.href}>
-              {/* Corrected Link usage: className directly on Link, close menu on click */}
-              <Link
-                href={item.href}
-                onClick={toggleMenu}
-                className={`transition flex items-center gap-3 ${theme === 'dark' ? 'text-gray-200 hover:text-blue-400' : 'text-gray-700 hover:text-blue-600'
-                  }`}
-              >
-                <span className="text-2xl">{iconMap[item.icon]}</span>
-                {item.text}
-              </Link>
-            </li>
-          ))}
-          {/* Login/Register for Mobile Menu */}
-          <li className="pt-4 border-t border-gray-700 dark:border-gray-200">
-            {/* Corrected Link usage, close menu on click */}
+      {/* Mobile Menu */}
+      <div className={`fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 ${
+        isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      } md:hidden`} onClick={() => setMenuOpen(false)}></div>
+      
+      <nav className={`fixed top-0 left-0 w-64 h-full z-50 bg-white dark:bg-gray-900 shadow-xl transform transition-transform duration-300 ease-in-out ${
+        isMenuOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}>
+        <div className="h-full flex flex-col">
+          <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+            <div className="flex items-center gap-3">
+              <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
+                theme === 'dark' ? 'bg-blue-900/80' : 'bg-blue-100'
+              }`}>
+                <img src="/logo.png" alt="Logo" className="w-5 h-5" />
+              </div>
+              <span className={`text-lg font-semibold ${
+                theme === 'dark' ? 'text-blue-300' : 'text-blue-600'
+              }`}>
+                SmartWard
+              </span>
+            </div>
+          </div>
+          
+          <div className="flex-1 overflow-y-auto p-4">
+            <ul className="space-y-2">
+              {navItems.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    onClick={() => setMenuOpen(false)}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-lg ${
+                      isActive(item.href)
+                        ? theme === 'dark'
+                          ? 'bg-blue-900/30 text-blue-300'
+                          : 'bg-blue-100 text-blue-600'
+                        : theme === 'dark'
+                          ? 'text-gray-300 hover:bg-gray-800'
+                          : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    <span className="w-5 h-5 flex items-center justify-center">
+                      {iconMap[item.icon as keyof typeof iconMap]}
+                    </span>
+                    <span>{item.text}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          
+          <div className="p-4 border-t border-gray-200 dark:border-gray-700 space-y-3">
             <Link
               href="/login"
-              onClick={toggleMenu}
-              className="px-6 py-2 rounded-full font-semibold border-2 border-blue-400 text-blue-400 hover:border-transparent hover:bg-[linear-gradient(135deg,#4a9af9_0%,#3a7ad9_100%)] hover:text-white transition-all duration-300 w-full text-center inline-block"
+              onClick={() => setMenuOpen(false)}
+              className={`flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg ${
+                theme === 'dark'
+                  ? 'text-gray-300 hover:bg-gray-800'
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
             >
-              Login
+              {iconMap.login}
+              <span>Login</span>
             </Link>
-          </li>
-          <li>
-            {/* Corrected Link usage, close menu on click */}
             <Link
               href="/signup"
-              onClick={toggleMenu}
-              className="px-6 py-2 rounded-full font-semibold text-white hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 w-full text-center inline-block"
-              style={{
-                background: 'linear-gradient(135deg, #4a9af9 0%, #3a7ad9 100%)',
-              }}
+              onClick={() => setMenuOpen(false)}
+              className={`flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg ${
+                theme === 'dark'
+                  ? 'bg-blue-700 hover:bg-blue-600 text-white'
+                  : 'bg-blue-600 hover:bg-blue-500 text-white'
+              }`}
             >
-              Register
+              {iconMap.signup}
+              <span>Sign Up</span>
             </Link>
-          </li>
-        </ul>
+          </div>
+        </div>
       </nav>
     </>
   );
