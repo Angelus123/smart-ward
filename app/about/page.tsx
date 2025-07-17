@@ -1,10 +1,13 @@
 'use client';
 import Header from '../components/Header';
+import Footer from '../components/Footer';
 import { useTheme } from 'next-themes';
+import { AuthProvider } from '../context/AuthContext';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import AudioPlayer from '../components/AudioPlayer';
 
-export default function About() {
+function About() {
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
 
@@ -21,7 +24,7 @@ export default function About() {
                     className="flex flex-col items-center space-y-4"
                 >
                     <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                    <span className="text-gray-500 dark:text-gray-400">Loading Smart Ward...</span>
+                    <span className="text-gray-500 dark:text-gray-400">Loading Hobpeg...</span>
                 </motion.div>
             </div>
         );
@@ -79,13 +82,25 @@ export default function About() {
                     className="text-center mb-16"
                 >
                     <h1 className={`text-4xl sm:text-5xl md:text-6xl font-bold mb-6 bg-clip-text ${theme === 'dark' ? 'text-transparent bg-gradient-to-r from-blue-400 to-cyan-300' : 'text-transparent bg-gradient-to-r from-blue-600 to-cyan-500'}`}>
-                        About Smart Ward
+                        ABOUT HOBPEG
                     </h1>
                     <div className="mx-auto h-1 w-24 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 mb-8"></div>
                     <p className={`text-xl max-w-3xl mx-auto leading-relaxed ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                         Revolutionizing human-computer interaction through intuitive gesture control powered by cutting-edge computer vision technology.
                     </p>
                 </motion.section>
+                <motion.section
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                    className="max-w-4xl mx-auto mb-2"
+                >
+                    <AudioPlayer
+                        audioSrc="hobpeg.mp3" // Update with your actual MP3 path
+                        title="Listen to Hobpeg Overview"
+                    />
+                </motion.section>
+
 
                 {/* Mission Section */}
                 <motion.section
@@ -99,7 +114,7 @@ export default function About() {
                             Our Mission
                         </h2>
                         <p className={`text-lg leading-relaxed mb-6 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
-                            WIth Smart Ward, we&apos; re committed to making technology more intuitive and accessible. We believe the future of human-computer interaction should be as natural as waving to a friend.
+                            WIth Hobpeg, we&apos; re committed to making technology more intuitive and accessible. We believe the future of human-computer interaction should be as natural as waving to a friend.
                         </p>
                         <p className={`text-lg leading-relaxed ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                             Our system transforms how you interact with your environment, replacing complex interfaces with simple, natural gestures that anyone can use.
@@ -165,6 +180,15 @@ export default function About() {
                     </div>
                 </motion.section>
             </main>
+            <Footer theme={theme as 'light' | 'dark'} setTheme={setTheme} />
         </div>
+    );
+}
+
+export default function AboutPage() {
+    return (
+        <AuthProvider>
+            <About />
+        </AuthProvider>
     );
 }

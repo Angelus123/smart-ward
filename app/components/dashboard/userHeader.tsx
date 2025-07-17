@@ -15,8 +15,7 @@ import {
   User,
   LogOut
 } from 'lucide-react';
-import { useAuth } from '../context/AuthContext'; // Adjust the import path as needed
-
+import { useAuth } from '../../context/AuthContext'; 
 const iconMap = {
   home: <Home className="w-4 h-4" />,
   info: <Info className="w-4 h-4" />,
@@ -51,17 +50,20 @@ export default function Header({ theme, setTheme }: HeaderProps) {
 
   return (
     <>
-      <header className={`fixed w-full top-0 z-50 py-3 transition-colors duration-300 ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-gray-800'
-        } shadow-sm`}>
+      <header className={`fixed w-full top-0 z-50 py-3 transition-colors duration-300 ${
+        theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-gray-800'
+      } shadow-sm`}>
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${theme === 'dark' ? 'bg-blue-900/80' : 'bg-blue-100'
-              }`}>
+            <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
+              theme === 'dark' ? 'bg-blue-900/80' : 'bg-blue-100'
+            }`}>
               <img src="/logo.png" alt="Logo" className="w-5 h-5" />
             </div>
-            <span className={`hidden sm:block text-xl font-semibold ${theme === 'dark' ? 'text-blue-300' : 'text-blue-600'
-              }`}>
+            <span className={`hidden sm:block text-xl font-semibold ${
+              theme === 'dark' ? 'text-blue-300' : 'text-blue-600'
+            }`}>
               Hobpeg
             </span>
           </div>
@@ -71,47 +73,26 @@ export default function Header({ theme, setTheme }: HeaderProps) {
             <ul className="flex space-x-1">
               {navItems.map((item) => (
                 <li key={item.href}>
-                  {item.href === '/buy' || item.href === '/support' ? (
-                    <>
-                      {user && (
-                        <Link
-                          href={item.href}
-                          className={`relative flex items-center gap-2 px-4 py-2 rounded-md transition-all ${isActive(item.href)
-                              ? theme === 'dark'
-                                ? 'text-blue-300 font-medium'
-                                : 'text-blue-600 font-medium'
-                              : theme === 'dark'
-                                ? 'text-gray-300 hover:text-blue-300'
-                                : 'text-gray-600 hover:text-blue-600'
-                            }`}
-                        >
-                          {iconMap[item.icon as keyof typeof iconMap]}
-                          <span>{item.text}</span>
-                          {isActive(item.href) && (
-                            <span
-                              className={`absolute -bottom-1 left-1/2 -translate-x-1/2 w-4/5 h-0.5 rounded-full ${theme === 'dark' ? 'bg-blue-400' : 'bg-blue-500'
-                                }`}
-                            ></span>
-                          )}
-                        </Link>
-                      )}
-                    </>
-                  ) : (
-                    <Link
-                      href={item.href}
-                      className={`flex items-center gap-2 px-4 py-2 rounded-md transition-all ${isActive(item.href)
-                          ? theme === 'dark'
-                            ? 'text-blue-300 font-medium'
-                            : 'text-blue-600 font-medium'
-                          : theme === 'dark'
-                            ? 'text-gray-300 hover:text-blue-300'
-                            : 'text-gray-600 hover:text-blue-600'
-                        }`}
-                    >
-                      {iconMap[item.icon as keyof typeof iconMap]}
-                      <span>{item.text}</span>
-                    </Link>
-                  )}
+                  <Link
+                    href={item.href}
+                    className={`relative flex items-center gap-2 px-4 py-2 rounded-md transition-all ${
+                      isActive(item.href)
+                        ? theme === 'dark'
+                          ? 'text-blue-300 font-medium'
+                          : 'text-blue-600 font-medium'
+                        : theme === 'dark'
+                          ? 'text-gray-300 hover:text-blue-300'
+                          : 'text-gray-600 hover:text-blue-600'
+                    }`}
+                  >
+                    {iconMap[item.icon as keyof typeof iconMap]}
+                    <span>{item.text}</span>
+                    {isActive(item.href) && (
+                      <span className={`absolute -bottom-1 left-1/2 -translate-x-1/2 w-4/5 h-0.5 rounded-full ${
+                        theme === 'dark' ? 'bg-blue-400' : 'bg-blue-500'
+                      }`}></span>
+                    )}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -123,20 +104,22 @@ export default function Header({ theme, setTheme }: HeaderProps) {
               <>
                 <Link
                   href="/profile"
-                  className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm ${theme === 'dark'
+                  className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm ${
+                    theme === 'dark'
                       ? 'text-gray-300 hover:bg-gray-800'
                       : 'text-gray-700 hover:bg-gray-100'
-                    }`}
+                  }`}
                 >
                   {iconMap.user}
                   <span>Profile</span>
                 </Link>
                 <button
                   onClick={logout}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm ${theme === 'dark'
+                  className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm ${
+                    theme === 'dark'
                       ? 'bg-red-700 hover:bg-red-600 text-white'
                       : 'bg-red-600 hover:bg-red-500 text-white'
-                    }`}
+                  }`}
                 >
                   {iconMap.logout}
                   <span>Logout</span>
@@ -146,20 +129,22 @@ export default function Header({ theme, setTheme }: HeaderProps) {
               <>
                 <Link
                   href="/login"
-                  className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm ${theme === 'dark'
+                  className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm ${
+                    theme === 'dark'
                       ? 'text-gray-300 hover:bg-gray-800'
                       : 'text-gray-700 hover:bg-gray-100'
-                    }`}
+                  }`}
                 >
                   {iconMap.login}
                   <span>Login</span>
                 </Link>
                 <Link
                   href="/signup"
-                  className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm ${theme === 'dark'
+                  className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm ${
+                    theme === 'dark'
                       ? 'bg-blue-700 hover:bg-blue-600 text-white'
                       : 'bg-blue-600 hover:bg-blue-500 text-white'
-                    }`}
+                  }`}
                 >
                   {iconMap.signup}
                   <span>Sign Up</span>
@@ -198,12 +183,15 @@ export default function Header({ theme, setTheme }: HeaderProps) {
               aria-label="Toggle menu"
             >
               <div className="space-y-1.5">
-                <span className={`block w-6 h-0.5 rounded-full transition-all ${theme === 'dark' ? 'bg-white' : 'bg-gray-800'
-                  } ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
-                <span className={`block w-6 h-0.5 rounded-full ${theme === 'dark' ? 'bg-white' : 'bg-gray-800'
-                  } ${isMenuOpen ? 'opacity-0' : 'opacity-100'}`}></span>
-                <span className={`block w-6 h-0.5 rounded-full transition-all ${theme === 'dark' ? 'bg-white' : 'bg-gray-800'
-                  } ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
+                <span className={`block w-6 h-0.5 rounded-full transition-all ${
+                  theme === 'dark' ? 'bg-white' : 'bg-gray-800'
+                } ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
+                <span className={`block w-6 h-0.5 rounded-full ${
+                  theme === 'dark' ? 'bg-white' : 'bg-gray-800'
+                } ${isMenuOpen ? 'opacity-0' : 'opacity-100'}`}></span>
+                <span className={`block w-6 h-0.5 rounded-full transition-all ${
+                  theme === 'dark' ? 'bg-white' : 'bg-gray-800'
+                } ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
               </div>
             </button>
           </div>
@@ -211,25 +199,29 @@ export default function Header({ theme, setTheme }: HeaderProps) {
       </header>
 
       {/* Mobile Menu */}
-      <div className={`fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 ${isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        } md:hidden`} onClick={() => setMenuOpen(false)}></div>
-
-      <nav className={`fixed top-0 left-0 w-64 h-full z-50 bg-white dark:bg-gray-900 shadow-xl transform transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}>
+      <div className={`fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 ${
+        isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      } md:hidden`} onClick={() => setMenuOpen(false)}></div>
+      
+      <nav className={`fixed top-0 left-0 w-64 h-full z-50 bg-white dark:bg-gray-900 shadow-xl transform transition-transform duration-300 ease-in-out ${
+        isMenuOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}>
         <div className="h-full flex flex-col">
           <div className="p-4 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center gap-3">
-              <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${theme === 'dark' ? 'bg-blue-900/80' : 'bg-blue-100'
-                }`}>
+              <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
+                theme === 'dark' ? 'bg-blue-900/80' : 'bg-blue-100'
+              }`}>
                 <img src="/logo.png" alt="Logo" className="w-5 h-5" />
               </div>
-              <span className={`text-lg font-semibold ${theme === 'dark' ? 'text-blue-300' : 'text-blue-600'
-                }`}>
+              <span className={`text-lg font-semibold ${
+                theme === 'dark' ? 'text-blue-300' : 'text-blue-600'
+              }`}>
                 Hobpeg
               </span>
             </div>
           </div>
-
+          
           <div className="flex-1 overflow-y-auto p-4">
             <ul className="space-y-2">
               {navItems.map((item) => (
@@ -237,14 +229,15 @@ export default function Header({ theme, setTheme }: HeaderProps) {
                   <Link
                     href={item.href}
                     onClick={() => setMenuOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-lg ${isActive(item.href)
+                    className={`flex items-center gap-3 px-4 py-3 rounded-lg ${
+                      isActive(item.href)
                         ? theme === 'dark'
                           ? 'bg-blue-900/30 text-blue-300'
                           : 'bg-blue-100 text-blue-600'
                         : theme === 'dark'
                           ? 'text-gray-300 hover:bg-gray-800'
                           : 'text-gray-700 hover:bg-gray-100'
-                      }`}
+                    }`}
                   >
                     <span className="w-5 h-5 flex items-center justify-center">
                       {iconMap[item.icon as keyof typeof iconMap]}
@@ -255,17 +248,18 @@ export default function Header({ theme, setTheme }: HeaderProps) {
               ))}
             </ul>
           </div>
-
+          
           <div className="p-4 border-t border-gray-200 dark:border-gray-700 space-y-3">
             {user ? (
               <>
                 <Link
                   href="/profile"
                   onClick={() => setMenuOpen(false)}
-                  className={`flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg ${theme === 'dark'
+                  className={`flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg ${
+                    theme === 'dark'
                       ? 'text-gray-300 hover:bg-gray-800'
                       : 'text-gray-700 hover:bg-gray-100'
-                    }`}
+                  }`}
                 >
                   {iconMap.user}
                   <span>Profile</span>
@@ -275,10 +269,11 @@ export default function Header({ theme, setTheme }: HeaderProps) {
                     logout();
                     setMenuOpen(false);
                   }}
-                  className={`flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg ${theme === 'dark'
+                  className={`flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg ${
+                    theme === 'dark'
                       ? 'bg-red-700 hover:bg-red-600 text-white'
                       : 'bg-red-600 hover:bg-red-500 text-white'
-                    }`}
+                  }`}
                 >
                   {iconMap.logout}
                   <span>Logout</span>
@@ -289,10 +284,11 @@ export default function Header({ theme, setTheme }: HeaderProps) {
                 <Link
                   href="/login"
                   onClick={() => setMenuOpen(false)}
-                  className={`flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg ${theme === 'dark'
+                  className={`flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg ${
+                    theme === 'dark'
                       ? 'text-gray-300 hover:bg-gray-800'
                       : 'text-gray-700 hover:bg-gray-100'
-                    }`}
+                  }`}
                 >
                   {iconMap.login}
                   <span>Login</span>
@@ -300,10 +296,11 @@ export default function Header({ theme, setTheme }: HeaderProps) {
                 <Link
                   href="/signup"
                   onClick={() => setMenuOpen(false)}
-                  className={`flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg ${theme === 'dark'
+                  className={`flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg ${
+                    theme === 'dark'
                       ? 'bg-blue-700 hover:bg-blue-600 text-white'
                       : 'bg-blue-600 hover:bg-blue-500 text-white'
-                    }`}
+                  }`}
                 >
                   {iconMap.signup}
                   <span>Sign Up</span>

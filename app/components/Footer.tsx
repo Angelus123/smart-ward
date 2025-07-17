@@ -85,7 +85,7 @@ const Footer = ({ theme, setTheme }: FooterProps) => {
               <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isDark ? 'bg-blue-900' : 'bg-blue-100'} mr-3`}>
                 <img src="/logo.png" alt="Logo" className="w-6 h-6" />
               </div>
-              <span className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>Smart Ward</span>
+              <span className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>Hobpeg</span>
             </div>
             
             <div className="flex space-x-3">
@@ -143,7 +143,7 @@ const Footer = ({ theme, setTheme }: FooterProps) => {
         <div className={`mt-6 pt-6 border-t ${isDark ? 'border-gray-800' : 'border-gray-200'}`}>
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
-              © {new Date().getFullYear()} Smart Ward. All rights reserved.
+              © {new Date().getFullYear()} Hobpeg. All rights reserved.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <button
