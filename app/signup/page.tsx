@@ -2,24 +2,58 @@
 
 import { useEffect, useState } from 'react';
 import Link from "next/link";
-import { useTheme } from 'next-themes';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { useRouter } from 'next/navigation';
+import { useAutoDismiss } from '../hook/useAutoDismiss';
+import { useTheme } from 'next-themes';
+import { AuthProvider } from '../context/AuthContext';
 
-export default function RegisterPage() {
+ function Signup() {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     password: '',
     confirmPassword: '',
-    role: '',
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const router = useRouter();
+
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState('');
-  const [errors, setErrors] = useState({ fullName: '', email: '', password: '', role: '' });
+  const [errors, setErrors] = useState({ fullName: '', email: '', password: '' });
+  const [error, setError] = useState<{
+    message: string;
+    code: number | null;
+    visible: boolean;
+  }>({
+    message: '',
+    code: null,
+    visible: false
+  });
+
+  // Enhanced error handler
+  const handleError = (errorCode: number, customMessage?: string) => {
+    const messages = {
+      409: 'This email is already registered',
+      401: 'Invalid OTP code. Please try again.',
+      500: 'Server error. Please try again later.',
+      default: 'An unexpected error occurred'
+    };
+
+    setError({
+      message: customMessage || messages[errorCode as keyof typeof messages] || messages.default,
+      code: errorCode,
+      visible: true
+    });
+  };
+
+  useAutoDismiss(error.visible, (visible) =>
+    setError(prev => ({ ...prev, visible }))
+  );
+
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -31,6 +65,10 @@ export default function RegisterPage() {
       evaluatePasswordStrength(value);
     }
   };
+  // Handle logo click to redirect otpverify
+  const handleOtpVerifyClick = () => {
+    router.push(`/otpverify?email=${encodeURIComponent(formData.email)}`);
+  }
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -62,52 +100,81 @@ export default function RegisterPage() {
     }
   };
 
+  // Theme-based styling
+  const themeStyles = {
+    bgColor: theme === 'dark' ? 'bg-gray-900' : 'bg-gradient-to-br from-[#f0f4f8] to-[#e2e8f0]',
+    textColor: theme === 'dark' ? 'text-white' : 'text-gray-800',
+    secondaryTextColor: theme === 'dark' ? 'text-gray-300' : 'text-gray-500',
+    cardBg: theme === 'dark' ? 'bg-gray-800' : 'bg-white',
+    welcomeBg: theme === 'dark' ? 'bg-gradient-to-br from-gray-800 to-gray-900' : 'bg-gradient-to-br from-[#005bbb] to-[#003366]',
+    inputBg: theme === 'dark' ? 'bg-gray-700' : 'bg-white',
+    inputBorder: theme === 'dark' ? 'border-gray-600' : 'border-gray-300',
+    buttonBg: theme === 'dark' ? 'bg-gradient-to-r from-blue-700 to-blue-800' : 'bg-gradient-to-r from-[#005bbb] to-[#0066cc]',
+    successBg: theme === 'dark' ? 'bg-green-900' : 'bg-green-50',
+    successBorder: theme === 'dark' ? 'border-green-700' : 'border-green-200',
+    successText: theme === 'dark' ? 'text-green-300' : 'text-green-700',
+    errorBg: theme === 'dark' ? 'bg-red-400/20' : 'bg-red-50',
+    errorBorder: theme === 'dark' ? 'border-red-700/20' : 'border-red-200',
+    errorText: theme === 'dark' ? 'text-white' : 'text-red-700',
+    infoBg: theme === 'dark' ? 'bg-blue-900' : 'bg-blue-50',
+    infoBorder: theme === 'dark' ? 'border-blue-700' : 'border-blue-200',
+    infoText: theme === 'dark' ? 'text-blue-300' : 'text-blue-700',
+    welcomeText: theme === 'dark' ? 'text-blue-200' : 'text-blue-100',
+    welcomeSecondaryText: theme === 'dark' ? 'text-blue-300' : 'text-blue-200',
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  
-  try {
-    // Validate form data
-    const { fullName, email, password, confirmPassword, role } = formData;
-    const newErrors = {
-      fullName: !fullName ? 'Full name is required' : '',
-      email: !email ? 'Email is required' : !validateEmail(email) ? 'Please enter a valid email' : '',
-      password: !password ? 'Password is required' : password.length < 8 ? 'Password must be at least 8 characters' : '',
-      confirmPassword: password !== confirmPassword ? 'Passwords do not match' : '',
-      role: !role ? 'Please select a role' : ''
-    };
+    e.preventDefault();
+    const { fullName, email, password, confirmPassword } = formData;
 
-    setErrors(newErrors);
-
-    // Check if any errors exist
-    const hasErrors = Object.values(newErrors).some(error => error !== '');
-    if (hasErrors) {
+    // Validation
+    if (!fullName || !validateEmail(email) || password.length < 8 || password !== confirmPassword) {
+      console.error('Validation failed:', { fullName, email, password, confirmPassword });
+      setErrors({
+        fullName: !fullName ? 'Full Name is required' : '',
+        email: !validateEmail(email) ? 'Invalid email address' : '',
+        password: password.length < 8 ? 'Password must be at least 8 characters' : (password !== confirmPassword ? 'Passwords do not match' : '')
+      });
       return;
     }
 
     setLoading(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // On success
-    setSuccess(true);
-    // Reset form after successful submission if needed
-    // setFormData({ fullName: '', email: '', password: '', confirmPassword: '', role: '' });
-    
-    // Hide success message after 3 seconds
-    setTimeout(() => setSuccess(false), 3000);
-    
-  } catch (error) {
-    console.error('Registration failed:', error);
-    // Show error message to user
-    setErrors(prev => ({
-      ...prev,
-      form: 'Registration failed. Please try again later.'
-    }));
-  } finally {
-    setLoading(false);
-  }
-};
+
+    try {
+      const response = await fetch( `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/signup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: fullName,
+          email,
+          password
+        }),
+      });
+
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        handleError(response.status, data.error || 'An error occurred during signup');
+
+        console.error('Signup error:', data.error);
+        throw new Error(`Signup failed: ${response.statusText}`);
+      }
+
+      console.log('Signup successful:', data);
+      // Redirect to OTP verification page
+      handleOtpVerifyClick();
+
+      setSuccess(true);
+    } catch (error) {
+      console.error('Signup error:', error);
+    } finally {
+      setLoading(false);
+      setTimeout(() => setSuccess(false), 3000);
+    }
+  };
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -123,8 +190,10 @@ export default function RegisterPage() {
   return (
     <div className={`min-h-screen mt-12 flex flex-col ${theme === 'dark' ? 'bg-gray-900 text-gray-100' : 'bg-gradient-to-br from-blue-50 via-gray-50 to-white text-gray-800'}`}>
       <Header theme={theme as 'light' | 'dark'} setTheme={setTheme} />
-      
+
       <main className="flex-grow flex items-center justify-center p-4">
+
+
         <div className={`w-full max-w-6xl rounded-3xl shadow-2xl grid md:grid-cols-2 overflow-hidden min-h-[600px] ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
           {/* Left Panel - Welcome Section */}
           <div className={`welcome-section bg-gradient-to-br from-blue-600 to-blue-800 text-white p-2 flex flex-col justify-center relative hidden md:block ${theme === 'dark' ? 'from-blue-800 to-blue-900' : ''}`}>
@@ -135,7 +204,7 @@ export default function RegisterPage() {
                 </svg>
               </div>
               <div>
-                <h1 className="text-3xl font-bold mb-2">Smart Ward</h1>
+                <h1 className="text-3xl font-bold mb-2">Hobpeg</h1>
                 <p className="opacity-80">Revolutionizing human-computer interaction through intuitive gesture control powered by cutting-edge computer vision technology.</p>
               </div>
             </div>
@@ -187,49 +256,50 @@ export default function RegisterPage() {
           <div className={`p-12 flex flex-col justify-center ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
             <form onSubmit={handleSubmit} className="text-center mb-10">
               <div className="text-center">
-                <h2 className={`text-3xl font-bold ${theme === 'dark' ? 'text-white' : 'text-blue-800'}`}>Join Smart Ward</h2>
+                <h2 className={`text-3xl font-bold ${theme === 'dark' ? 'text-white' : 'text-blue-800'}`}>Join Hobpeg</h2>
                 <p className={`mt-2 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Be part of the gesture control revolution</p>
+
               </div>
 
               <div className="text-left">
                 <label className={`block text-sm font-medium mt-3 mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Full Name</label>
-                <input 
-                  id="fullName" 
-                  value={formData.fullName} 
-                  onChange={handleChange} 
-                  required 
-                  className={`w-full px-4 py-3 rounded-xl ${theme === 'dark' ? 'bg-gray-700 text-white border-gray-600' : 'bg-gray-50 border-gray-200'} border-2 ${errors.fullName ? 'border-red-500' : ''} focus:outline-none focus:ring-2 focus:ring-blue-500`} 
-                  placeholder="John Doe" 
+                <input
+                  id="fullName"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  required
+                  className={`w-full px-4 py-3 rounded-xl ${theme === 'dark' ? 'bg-gray-700 text-white border-gray-600' : 'bg-gray-50 border-gray-200'} border-2 ${errors.fullName ? 'border-red-500' : ''} focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  placeholder="Enter Your Full Name"
                 />
               </div>
 
               <div className="text-left">
                 <label className={`block text-sm font-medium mt-3 mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Email</label>
-                <input 
-                  id="email" 
-                  type="email" 
-                  value={formData.email} 
-                  onChange={handleChange} 
-                  required 
-                  className={`w-full px-4 py-3 rounded-xl ${theme === 'dark' ? 'bg-gray-700 text-white border-gray-600' : 'bg-gray-50 border-gray-200'} border-2 ${errors.email ? 'border-red-500' : ''} focus:outline-none focus:ring-2 focus:ring-blue-500`} 
-                  placeholder="email@example.com" 
+                <input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  className={`w-full px-4 py-3 rounded-xl ${theme === 'dark' ? 'bg-gray-700 text-white border-gray-600' : 'bg-gray-50 border-gray-200'} border-2 ${errors.email ? 'border-red-500' : ''} focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  placeholder="Enter Your Email"
                 />
               </div>
 
               <div className="text-left">
                 <label className={`block text-sm font-medium mt-3 mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Password</label>
-                <input 
-                  id="password" 
-                  type={showPassword ? 'text' : 'password'} 
-                  value={formData.password} 
-                  onChange={handleChange} 
-                  required 
-                  className={`w-full px-4 py-3 rounded-xl ${theme === 'dark' ? 'bg-gray-700 text-white border-gray-600' : 'bg-gray-50 border-gray-200'} border-2 ${errors.password ? 'border-red-500' : ''} focus:outline-none focus:ring-2 focus:ring-blue-500`} 
-                  placeholder="••••••••" 
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  className={`w-full px-4 py-3 rounded-xl ${theme === 'dark' ? 'bg-gray-700 text-white border-gray-600' : 'bg-gray-50 border-gray-200'} border-2 ${errors.password ? 'border-red-500' : ''} focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  placeholder="••••••••"
                 />
-                <button 
-                  type="button" 
-                  onClick={() => setShowPassword(!showPassword)} 
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
                   className={`mt-2 text-xs ${theme === 'dark' ? 'text-blue-300' : 'text-blue-600'}`}
                 >
                   {showPassword ? 'Hide password' : 'Show password'}
@@ -249,47 +319,55 @@ export default function RegisterPage() {
 
               <div className="text-left">
                 <label className={`block text-sm font-medium mt-3 mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Confirm Password</label>
-                <input 
-                  id="confirmPassword" 
-                  type={showConfirmPassword ? 'text' : 'password'} 
-                  value={formData.confirmPassword} 
-                  onChange={handleChange} 
-                  required 
-                  className={`w-full px-4 py-3 rounded-xl ${theme === 'dark' ? 'bg-gray-700 text-white border-gray-600' : 'bg-gray-50 border-gray-200'} border-2 ${errors.password ? 'border-red-500' : ''} focus:outline-none focus:ring-2 focus:ring-blue-500`} 
-                  placeholder="••••••••" 
+                <input
+                  id="confirmPassword"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  required
+                  className={`w-full px-4 py-3 rounded-xl ${theme === 'dark' ? 'bg-gray-700 text-white border-gray-600' : 'bg-gray-50 border-gray-200'} border-2 ${errors.password ? 'border-red-500' : ''} focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  placeholder="••••••••"
                 />
-                <button 
-                  type="button" 
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)} 
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className={`mt-2 text-xs ${theme === 'dark' ? 'text-blue-300' : 'text-blue-600'}`}
                 >
                   {showConfirmPassword ? 'Hide password' : 'Show password'}
                 </button>
               </div>
+              {error.visible && (
+                <div className={`
+                                ${themeStyles.errorBg} 
+                                border-2 ${themeStyles.errorBorder} 
+                                ${themeStyles.errorText} 
+                                p-4 rounded-lg mb-5 text-center relative
+                                animate-fade-in transition-all duration-300
+                                ${error.visible ? 'opacity-100' : 'opacity-0'}
+                              `}>
+                  <button
+                    onClick={() => setError(prev => ({ ...prev, visible: false }))}
+                    className="absolute top-1 right-2 text-lg hover:opacity-70 cursor-pointer"
+                    aria-label="Close notification"
+                  >
+                    &times;
+                  </button>
 
-              <div className="text-left">
-                <label className={`block text-sm font-medium mt-3 mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Role</label>
-                <select 
-                  id="role" 
-                  value={formData.role} 
-                  onChange={handleChange} 
-                  required 
-                  className={`w-full px-4 py-3 rounded-xl ${theme === 'dark' ? 'bg-gray-700 text-white border-gray-600' : 'bg-gray-50 border-gray-200'} border-2 ${errors.role ? 'border-red-500' : ''} focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer`}
-                >
-                  <option value="">Select your role</option>
-                  <option value="developer">Developer</option>
-                  <option value="designer">Designer</option>
-                  <option value="researcher">Researcher</option>
-                  <option value="enthusiast">Tech Enthusiast</option>
-                </select>
-              </div>
+                  <strong className="block mb-1">
+                    {error.code === 409 ? 'Registration Issue' :
+                      error.code === 401 ? 'Verification Failed' :
+                        'Error'}
+                  </strong>
+                  <span>{error.message}</span>
+                </div>
+              )}
 
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 disabled={loading}
-                className={`bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-lg font-semibold w-full shadow-lg mt-5 hover:opacity-90 transition-opacity ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                className={`bg-gradient-to-r from-blue-600 to-blue-700 cursor-pointer text-white py-3 rounded-lg font-semibold w-full shadow-lg mt-5 hover:opacity-90 transition-opacity ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
               >
-                {loading ? 'Creating Account...' : 'Join Smart Ward'}
+                {loading ? 'Creating Account...' : 'Join Hobpeg'}
               </button>
 
               <div className={`mt-4 p-3 rounded-xl ${theme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'} border-2`}>
@@ -300,7 +378,7 @@ export default function RegisterPage() {
 
               {success && (
                 <div className={`mt-4 p-3 rounded-md text-sm text-center ${theme === 'dark' ? 'bg-green-900 text-green-200 border-green-700' : 'bg-green-100 text-green-700 border-green-300'} border`}>
-                  ✅ Welcome to Smart Ward! Redirecting...
+                  ✅ Welcome to Hobpeg! Redirecting...
                 </div>
               )}
             </form>
@@ -310,5 +388,15 @@ export default function RegisterPage() {
 
       <Footer theme={theme as 'light' | 'dark'} setTheme={setTheme} />
     </div>
+  );
+}
+
+export default function SignupPage() {
+  return (
+    <AuthProvider>
+      {/* <ProtectedRoute> */}
+        <Signup />
+      {/* </ProtectedRoute> */}
+    </AuthProvider>
   );
 }

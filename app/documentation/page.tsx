@@ -2,6 +2,7 @@
 import Header from '../components/Header';
 import { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
+import { AuthProvider } from '../context/AuthContext';
 import {
   FiDownload,
   FiSettings,
@@ -47,10 +48,10 @@ const Documentation: React.FC = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
           <h1 className={`text-4xl sm:text-5xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-            Smart Ward Documentation
+            Hobpeg Documentation
           </h1>
           <p className={`text-lg max-w-3xl mx-auto ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-            Complete technical documentation, guides, and reference materials for your Smart Ward system
+            Complete technical documentation, guides, and reference materials for your Hobpeg system
           </p>
         </div>
 
@@ -116,7 +117,7 @@ const Documentation: React.FC = () => {
                   Need Help?
                 </h4>
                 <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-blue-700'}`}>
-                  Contact our support team at support@smartward.com
+                  Contact our support team at support@Hobpeg.com
                 </p>
               </div>
             </nav>
@@ -172,7 +173,7 @@ const Documentation: React.FC = () => {
                         details: 'We recommend using the 64-bit Lite version for best performance',
                       },
                       {
-                        step: 'Download the Smart Ward software package: wget https://install.smartward.com/latest.zip',
+                        step: 'Download the Hobpeg software package: wget https://install.Hobpeg.com/latest.zip',
                         details: 'Verify the checksum before installation',
                       },
                       {
@@ -184,7 +185,7 @@ const Documentation: React.FC = () => {
                         details: 'Follow the on-screen prompts during installation',
                       },
                       {
-                        step: 'Configure the server IP in the Smart Ward dashboard',
+                        step: 'Configure the server IP in the Hobpeg dashboard',
                         details: 'Access the dashboard at http://localhost:8080 after installation',
                       },
                       {
@@ -227,7 +228,7 @@ const Documentation: React.FC = () => {
                       </li>
                       <li className="flex items-start gap-2">
                         <FiCheckCircle className={`flex-shrink-0 mt-1 ${isDark ? 'text-green-400' : 'text-green-600'}`} />
-                        <span>Configure automatic startup: sudo systemctl enable smartward</span>
+                        <span>Configure automatic startup: sudo systemctl enable Hobpeg</span>
                       </li>
                     </ul>
                   </div>
@@ -246,10 +247,10 @@ const Documentation: React.FC = () => {
                 <div className="mb-8">
                   <h3 className={`text-xl font-semibold mb-4 ${isDark ? 'text-white' : 'text-gray-700'}`}>Getting Started</h3>
                   <p className={`mb-4 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-                    After successful installation, launch the Smart Ward application from your Raspberry Pi&apos;s application menu or by running:
+                    After successful installation, launch the Hobpeg application from your Raspberry Pi&apos;s application menu or by running:
                   </p>
                   <div className={`p-4 rounded-lg mb-6 ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
-                    <code className={`block ${isDark ? 'text-green-400' : 'text-green-800'}`}>smartward start</code>
+                    <code className={`block ${isDark ? 'text-green-400' : 'text-green-800'}`}>Hobpeg start</code>
                   </div>
                   <p className={`mb-4 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                     The system will automatically detect your camera and available devices. Access the web interface at:
@@ -295,7 +296,7 @@ const Documentation: React.FC = () => {
                       Create your own gestures by accessing the Training section in the web interface.
                     </p>
                     <code className={`block p-2 rounded mb-2 ${isDark ? 'bg-gray-800 text-green-400' : 'bg-white text-green-800'}`}>
-                      smartward train --name=&quot;MyGesture&quot; --duration=5
+                      Hobpeg train --name=&quot;MyGesture&quot; --duration=5
                     </code>
                     <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-blue-600'}`}>
                       This will start a 5-second training session for your new gesture.
@@ -324,18 +325,18 @@ const Documentation: React.FC = () => {
                       },
                       {
                         problem: 'Gesture recognition inaccurate',
-                        solution: 'Ensure proper lighting and recalibrate using smartward-calibrate',
+                        solution: 'Ensure proper lighting and recalibrate using Hobpeg-calibrate',
                         fix: 'Improve environment lighting or adjust camera position',
                       },
                       {
                         problem: 'High CPU usage',
                         solution: 'Optimize by reducing camera resolution or frame rate',
-                        fix: 'Edit /etc/smartward/config.yaml and set resolution: 640x480',
+                        fix: 'Edit /etc/Hobpeg/config.yaml and set resolution: 640x480',
                       },
                       {
                         problem: 'Web interface not loading',
-                        solution: 'Check if service is running: systemctl status smartward',
-                        fix: 'Restart service: sudo systemctl restart smartward',
+                        solution: 'Check if service is running: systemctl status Hobpeg',
+                        fix: 'Restart service: sudo systemctl restart Hobpeg',
                       },
                       {
                         problem: 'Lag in response',
@@ -366,7 +367,7 @@ const Documentation: React.FC = () => {
                       Run comprehensive diagnostics with:
                     </p>
                     <code className={`block p-2 rounded mb-2 ${isDark ? 'bg-gray-800 text-green-400' : 'bg-white text-green-800'}`}>
-                      smartward diagnose --full
+                      Hobpeg diagnose --full
                     </code>
                     <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-blue-600'}`}>
                       This will check all system components and generate a report.
@@ -381,10 +382,10 @@ const Documentation: React.FC = () => {
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {[
-                      { command: 'View service logs', code: 'journalctl -u smartward -n 50' },
-                      { command: 'View installation logs', code: 'cat /var/log/smartward-install.log' },
+                      { command: 'View service logs', code: 'journalctl -u Hobpeg -n 50' },
+                      { command: 'View installation logs', code: 'cat /var/log/Hobpeg-install.log' },
                       { command: 'View camera diagnostics', code: 'v4l2-ctl --all' },
-                      { command: 'View system resource usage', code: 'top -b -n 1 | grep smartward' },
+                      { command: 'View system resource usage', code: 'top -b -n 1 | grep Hobpeg' },
                     ].map((item, index) => (
                       <div key={index} className={`p-3 rounded ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
                         <p className={`text-sm mb-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{item.command}</p>
@@ -407,10 +408,10 @@ const Documentation: React.FC = () => {
                 </h2>
 
                 <div className="mb-8">
-                  <h3 className={`text-xl font-semibold mb-4 ${isDark ? 'text-white' : 'text-gray-700'}`}>Smart Ward License Agreement</h3>
+                  <h3 className={`text-xl font-semibold mb-4 ${isDark ? 'text-white' : 'text-gray-700'}`}>Hobpeg License Agreement</h3>
                   <div className={`p-4 rounded-lg mb-6 ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
                     <p className={`mb-4 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                      Smart Ward is licensed under the GNU General Public License v3.0. This license allows you to:
+                      Hobpeg is licensed under the GNU General Public License v3.0. This license allows you to:
                     </p>
                     <ul className={`space-y-2 mb-4 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                       <li className="flex items-start gap-2">
@@ -430,7 +431,7 @@ const Documentation: React.FC = () => {
                       Full license text is available in the LICENSE file included with your installation or at:
                     </p>
                     <code className={`block p-2 rounded mt-2 ${isDark ? 'bg-gray-800 text-blue-400' : 'bg-gray-100 text-blue-800'}`}>
-                      /usr/share/smartward/LICENSE
+                      /usr/share/Hobpeg/LICENSE
                     </code>
                   </div>
                 </div>
@@ -438,7 +439,7 @@ const Documentation: React.FC = () => {
                 <div className="mb-8">
                   <h3 className={`text-xl font-semibold mb-4 ${isDark ? 'text-white' : 'text-gray-700'}`}>Third-Party Licenses</h3>
                   <p className={`mb-4 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-                    Smart Ward incorporates several open-source components:
+                    Hobpeg incorporates several open-source components:
                   </p>
                   <div className={`overflow-x-auto ${isDark ? 'bg-gray-700' : 'bg-white'} rounded-lg border ${isDark ? 'border-gray-600' : 'border-gray-200'}`}>
                     <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
@@ -554,7 +555,7 @@ const Documentation: React.FC = () => {
                 <div className="mb-8">
                   <h3 className={`text-xl font-semibold mb-4 ${isDark ? 'text-white' : 'text-gray-700'}`}>REST API Endpoints</h3>
                   <p className={`mb-4 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-                    Smart Ward provides a comprehensive REST API for integration with other systems. Base URL:
+                    Hobpeg provides a comprehensive REST API for integration with other systems. Base URL:
                   </p>
                   <div className={`p-4 rounded-lg mb-6 ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
                     <code className={`block ${isDark ? 'text-blue-400' : 'text-blue-800'}`}>http://[your-ip]:8080/api/v1</code>
@@ -614,7 +615,7 @@ const Documentation: React.FC = () => {
                 <div className="mb-8">
                   <h3 className={`text-xl font-semibold mb-4 ${isDark ? 'text-white' : 'text-gray-700'}`}>Example API Usage</h3>
                   <p className={`mb-4 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-                    Below is an example of how to interact with the Smart Ward API using cURL to list all gestures:
+                    Below is an example of how to interact with the Hobpeg API using cURL to list all gestures:
                   </p>
                   <div className={`p-4 rounded-lg mb-6 ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
                     <code className={`block ${isDark ? 'text-green-400' : 'text-green-800'}`}>
@@ -647,7 +648,7 @@ const Documentation: React.FC = () => {
                     </code>
                   </div>
                   <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                    Replace `your-api-key` with your actual API key, available in the Smart Ward dashboard under API Settings.
+                    Replace `your-api-key` with your actual API key, available in the Hobpeg dashboard under API Settings.
                   </p>
                 </div>
 
@@ -655,7 +656,7 @@ const Documentation: React.FC = () => {
                   <h3 className={`text-xl font-semibold mb-4 ${isDark ? 'text-white' : 'text-gray-700'}`}>Authentication</h3>
                   <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-700' : 'bg-blue-50'} mb-6`}>
                     <p className={`mb-3 ${isDark ? 'text-gray-300' : 'text-blue-700'}`}>
-                      All API requests require a Bearer token. Generate your token in the Smart Ward dashboard and include it in the
+                      All API requests require a Bearer token. Generate your token in the Hobpeg dashboard and include it in the
                       Authorization header:
                     </p>
                     <code className={`block p-2 rounded ${isDark ? 'bg-gray-800 text-green-400' : 'bg-white text-green-800'}`}>
@@ -672,4 +673,10 @@ const Documentation: React.FC = () => {
   );
 };
 
-export default Documentation;
+export default function DocumentationPage() {
+  return (
+    <AuthProvider>
+        < Documentation />
+    </AuthProvider>
+  );
+}

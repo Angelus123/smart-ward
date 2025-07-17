@@ -5,8 +5,9 @@ import Link from "next/link";
 import { useTheme } from 'next-themes';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { AuthProvider } from '../context/AuthContext';
 
-export default function ForgotPasswordPage() {
+function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({ email: '' });
@@ -51,7 +52,7 @@ export default function ForgotPasswordPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"></path>
                 </svg>
               </div>
-              <h1 className="text-3xl font-bold mb-2">Smart Ward</h1>
+              <h1 className="text-3xl font-bold mb-2">Hobpeg</h1>
               <p className="text-lg font-medium mb-4">Forgot Your Password?</p>
               <p className="opacity-90 mb-6">
                 No worries! Enter your email address and we&apos;ll send you a secure link to reset your password and regain access to your gesture control system.
@@ -140,5 +141,13 @@ export default function ForgotPasswordPage() {
 
       <Footer theme={theme as 'light' | 'dark'} setTheme={setTheme} />
     </div>
+  );
+}
+
+export default function ForgotPasswordPage() {
+  return (
+    <AuthProvider>
+        <ForgotPassword />
+    </AuthProvider>
   );
 }
