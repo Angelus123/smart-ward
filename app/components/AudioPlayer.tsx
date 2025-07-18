@@ -95,7 +95,7 @@ export default function AudioPlayer({ audioSrc, title = "Audio Player" }: AudioP
       />
       
       <div className="flex items-center justify-between mb-2">
-        <h3 className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+        <h3 className={`font-medium text-sm ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
           {title}
         </h3>
         <span className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
