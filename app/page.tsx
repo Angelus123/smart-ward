@@ -55,7 +55,7 @@ function Home() {
 
       {/* Hero Section */}
       <section
-        className="pt-15 pb-24 relative overflow-hidden"
+        className="pt-15 relative overflow-hidden"
         style={{
           backgroundColor: isDark ? '#0a1f44' : '#f8fafd',
           backgroundImage: isDark
