@@ -35,7 +35,7 @@ export default function HeroWithVideo() {
 
                 <div className="flex flex-col w-full lg:flex-row items-center justify-between">
                     <div className={`max-w-full text-center lg:text-left mb-12 lg:mb-0  p-6 rounded-lg shadow-lg backdrop-blur-md`}>
-                        <h1 className={`text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-5 bg-gradient-to-r ${isDark ? 'from-[#0a1f44] to-[#2a5a9c]' : 'from-[#0a1f44] to-[#2a5a9c]'} bg-clip-text text-white`}>
+                        <h1 className={`text-4xl font-bold mb-4 bg-gradient-to-r ${isDark ? 'from-[#93c5fd] to-[#3b82f6]' : 'from-[#93c5fd] to-[#3b82f6]'} bg-clip-text text-transparent`}>
                             Control With A Wave
                         </h1>
                         <p className={`text-lg mb-8 max-w-lg mx-auto lg:mx-0 ${isDark ? 'text-gray-300' : 'text-gray-300'}`}>
