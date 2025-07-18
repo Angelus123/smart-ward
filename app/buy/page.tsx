@@ -1,6 +1,7 @@
 'use client';
 import Header from '../components/Header';
 import { useEffect, useState } from 'react';
+import { AuthProvider } from '../context/AuthContext';
 import { useTheme } from 'next-themes';
 
 interface Package {
@@ -10,7 +11,7 @@ interface Package {
   popular?: boolean;
 }
 
-const Buy: React.FC = () => {
+const Purchase: React.FC = () => {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
@@ -83,7 +84,7 @@ const Buy: React.FC = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         <div className="text-center mb-16">
           <h1 className={`text-4xl sm:text-5xl font-bold mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-            Smart Ward Packages
+            Hobpeg Packages
           </h1>
           <p className={`text-lg max-w-2xl mx-auto ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
             Choose the perfect package to bring gesture-based control to your environment.
@@ -174,4 +175,11 @@ const Buy: React.FC = () => {
   );
 };
 
-export default Buy;
+
+export default function PurchasePage() {
+  return (
+    <AuthProvider>
+        <Purchase />
+    </AuthProvider>
+  );
+}

@@ -3,6 +3,7 @@
 import { useEffect, useState, FormEvent, ChangeEvent } from 'react';
 import Header from '../components/Header';
 import { useTheme } from 'next-themes';
+import { AuthProvider } from '../context/AuthContext';
 import { FiPaperclip, FiCheckCircle, FiAlertCircle, FiClock, FiChevronRight, FiMessageSquare } from 'react-icons/fi';
 import Footer from '../components/Footer';
 
@@ -24,7 +25,7 @@ type SupportResponse = {
   createdAt: Date;
 };
 
-export default function Support() {
+function Support() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [activeTab, setActiveTab] = useState<'new' | 'tickets'>('new');
@@ -153,15 +154,14 @@ export default function Support() {
   const isDark = theme === 'dark';
 
   return (
-    <div className={`min-h-screen transition-colors duration-200 mt-20 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
+    <div className={`min-h-screen transition-colors duration-200 mt-14 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
       <Header theme={theme as 'light' | 'dark'} setTheme={setTheme} />
 
       <main className="container mx-auto py-8 mt-12 px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row gap-8">
           {/* Sidebar */}
-          <div className={`w-full md:w-64 p-4 rounded-lg shadow-sm border transition-colors duration-200 ${
-            isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-          }`}>
+          <div className={`w-full md:w-64 p-4 rounded-lg shadow-sm border transition-colors duration-200 ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+            }`}>
             <h2 className="text-xl font-bold mb-4">Support Center</h2>
             <nav>
               <ul className="space-y-2">
@@ -171,11 +171,10 @@ export default function Support() {
                       setActiveTab('new');
                       setSelectedTicket(null);
                     }}
-                    className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
-                      activeTab === 'new' && !selectedTicket
+                    className={`w-full text-left px-3 py-2 rounded-md transition-colors ${activeTab === 'new' && !selectedTicket
                         ? isDark ? 'bg-blue-900 text-white' : 'bg-blue-100 text-blue-800'
                         : isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-100'
-                    }`}
+                      }`}
                   >
                     New Ticket
                   </button>
@@ -186,11 +185,10 @@ export default function Support() {
                       setActiveTab('tickets');
                       setSelectedTicket(null);
                     }}
-                    className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
-                      activeTab === 'tickets' && !selectedTicket
+                    className={`w-full text-left px-3 py-2 rounded-md transition-colors ${activeTab === 'tickets' && !selectedTicket
                         ? isDark ? 'bg-blue-900 text-white' : 'bg-blue-100 text-blue-800'
                         : isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-100'
-                    }`}
+                      }`}
                   >
                     My Tickets
                   </button>
@@ -202,19 +200,143 @@ export default function Support() {
           {/* Main Content */}
           <div className="flex-1">
             {activeTab === 'new' && !selectedTicket ? (
-              <div className={`p-6 rounded-lg shadow-sm border transition-colors duration-200 ${
-                isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-              }`}>
+              <div className={`p-6 rounded-lg shadow-sm border transition-colors duration-200 ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                }`}>
                 <h1 className="text-2xl sm:text-3xl font-bold mb-6">New Support Ticket</h1>
-                <form onSubmit={handleSubmit}>
-                  {/* Form fields same as before */}
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label
+                        htmlFor="name"
+                        className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}
+                      >
+                        Your Name
+                      </label>
+                      <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        required
+                        className={`w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${isDark ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'
+                          }`}
+                        placeholder="John Doe"
+                      />
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="email"
+                        className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}
+                      >
+                        Email Address
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        required
+                        className={`w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${isDark ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'
+                          }`}
+                        placeholder="your@email.com"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="subject"
+                      className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}
+                    >
+                      Subject
+                    </label>
+                    <input
+                      type="text"
+                      id="subject"
+                      name="subject"
+                      value={formData.subject}
+                      onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                      required
+                      className={`w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${isDark ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'
+                        }`}
+                      placeholder="Briefly describe your issue"
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="message"
+                      className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}
+                    >
+                      Message
+                    </label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      rows={6}
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      required
+                      className={`w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${isDark ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'
+                        }`}
+                      placeholder="Please describe your issue in detail..."
+                    ></textarea>
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="attachment"
+                      className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}
+                    >
+                      Attachments (Optional)
+                    </label>
+                    <div className="flex items-center">
+                      <label
+                        htmlFor="attachment"
+                        className={`cursor-pointer px-4 py-2 rounded-lg border flex items-center ${isDark ? 'bg-gray-700 border-gray-600 hover:bg-gray-600' : 'bg-white border-gray-300 hover:bg-gray-50'
+                          }`}
+                      >
+                        <FiPaperclip className="mr-2" />
+                        <span>{selectedFile ? selectedFile.name : 'Choose file'}</span>
+                      </label>
+                      {selectedFile && (
+                        <button
+                          type="button"
+                          onClick={() => setSelectedFile(null)}
+                          className="ml-2 text-red-500 hover:text-red-700"
+                        >
+                          Remove
+                        </button>
+                      )}
+                      <input
+                        id="attachment"
+                        type="file"
+                        className="hidden"
+                        onChange={handleFileChange}
+                      />
+                    </div>
+                    <p className={`mt-1 text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                      Maximum file size: 5MB. Supported formats: .pdf, .jpg, .png, .txt
+                    </p>
+                  </div>
+
+                  <div className="pt-2">
+                    <button
+                      type="submit"
+                      className="w-full md:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    >
+                      Submit Ticket
+                    </button>
+                  </div>
                 </form>
               </div>
             ) : selectedTicket ? (
-              <div className={`p-6 rounded-lg shadow-sm border transition-colors duration-200 ${
-                isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-              }`}>
-                <button 
+              <div className={`p-6 rounded-lg shadow-sm border transition-colors duration-200 ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                }`}>
+                <button
                   onClick={() => setSelectedTicket(null)}
                   className={`flex items-center mb-4 text-sm ${isDark ? 'text-blue-400' : 'text-blue-600'}`}
                 >
@@ -252,9 +374,8 @@ export default function Support() {
                         <a
                           key={index}
                           href="#"
-                          className={`text-sm px-3 py-2 rounded-lg flex items-center ${
-                            isDark ? 'bg-gray-700 border border-gray-600 hover:bg-gray-600' : 'bg-gray-100 hover:bg-gray-200'
-                          }`}
+                          className={`text-sm px-3 py-2 rounded-lg flex items-center ${isDark ? 'bg-gray-700 border border-gray-600 hover:bg-gray-600' : 'bg-gray-100 hover:bg-gray-200'
+                            }`}
                         >
                           <FiPaperclip className="mr-2" />
                           {file}
@@ -274,11 +395,10 @@ export default function Support() {
                     selectedTicket.responses.map(response => (
                       <div
                         key={response.id}
-                        className={`p-4 rounded-lg ${
-                          response.isAdmin
+                        className={`p-4 rounded-lg ${response.isAdmin
                             ? isDark ? 'bg-blue-900/20 border border-blue-800' : 'bg-blue-50 border border-blue-100'
                             : isDark ? 'bg-gray-700 border border-gray-600' : 'bg-gray-100 border border-gray-200'
-                        }`}
+                          }`}
                       >
                         <div className="flex justify-between items-center mb-2">
                           <span className="font-medium">
@@ -300,9 +420,8 @@ export default function Support() {
                   <div className="mt-8">
                     <h4 className="font-medium mb-3">Add to this conversation</h4>
                     <textarea
-                      className={`w-full p-3 border rounded-lg mb-3 focus:outline-none focus:ring-2 ${
-                        isDark ? 'bg-gray-700 border-gray-600 focus:ring-blue-500' : 'bg-white border-gray-300 focus:ring-blue-500'
-                      }`}
+                      className={`w-full p-3 border rounded-lg mb-3 focus:outline-none focus:ring-2 ${isDark ? 'bg-gray-700 border-gray-600 focus:ring-blue-500' : 'bg-white border-gray-300 focus:ring-blue-500'
+                        }`}
                       rows={4}
                       placeholder="Type your message here..."
                     ></textarea>
@@ -329,9 +448,8 @@ export default function Support() {
                 </div>
               </div>
             ) : (
-              <div className={`p-6 rounded-lg shadow-sm border transition-colors duration-200 ${
-                isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-              }`}>
+              <div className={`p-6 rounded-lg shadow-sm border transition-colors duration-200 ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                }`}>
                 <h1 className="text-2xl sm:text-3xl font-bold mb-6">My Support Tickets</h1>
 
                 {tickets.length === 0 ? (
@@ -353,8 +471,8 @@ export default function Support() {
                       </thead>
                       <tbody>
                         {tickets.map(ticket => (
-                          <tr 
-                            key={ticket.id} 
+                          <tr
+                            key={ticket.id}
                             className={`border-b ${isDark ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'}`}
                           >
                             <td className="py-3 px-4">#{ticket.id.substring(0, 6)}</td>
@@ -370,9 +488,8 @@ export default function Support() {
                             <td className="py-3 px-4">
                               <button
                                 onClick={() => setSelectedTicket(ticket)}
-                                className={`px-3 py-1 rounded-md text-sm ${
-                                  isDark ? 'bg-blue-900 hover:bg-blue-800' : 'bg-blue-100 hover:bg-blue-200'
-                                }`}
+                                className={`px-3 py-1 rounded-md text-sm ${isDark ? 'bg-blue-900 hover:bg-blue-800' : 'bg-blue-100 hover:bg-blue-200'
+                                  }`}
                               >
                                 View
                               </button>
@@ -390,5 +507,13 @@ export default function Support() {
       </main>
       <Footer theme={theme as 'light' | 'dark'} setTheme={setTheme} />
     </div>
+  );
+}
+
+export default function SupportPage() {
+  return (
+    <AuthProvider>
+        <Support />
+    </AuthProvider>
   );
 }

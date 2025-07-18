@@ -14,7 +14,7 @@ export default function Hero() {
             Secure. Verify. Trust.
           </h1>
           <p className="text-lg text-text-gray mb-10 max-w-md">
-            ShieldSync protects your internal communications and sensitive files with AI-driven verification and compliance control.
+            Hobpeg protects your internal communications and sensitive files with AI-driven verification and compliance control.
           </p>
           <div className="flex gap-5">
             <Link href="#">
