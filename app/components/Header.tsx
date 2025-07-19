@@ -6,6 +6,7 @@ import {
   Home,
   Info,
   BookOpen,
+  LayoutDashboard,
   Headphones,
   ShoppingCart,
   LogIn,
@@ -23,6 +24,7 @@ const iconMap = {
   documentation: <BookOpen className="w-4 h-4" />,
   support: <Headphones className="w-4 h-4" />,
   buy: <ShoppingCart className="w-4 h-4" />,
+  dashboard: <LayoutDashboard className="w-4 h-4" />,
   login: <LogIn className="w-4 h-4" />,
   signup: <UserPlus className="w-4 h-4" />,
   user: <User className="w-4 h-4" />,
@@ -44,7 +46,8 @@ export default function Header({ theme, setTheme }: HeaderProps) {
     { href: '/about', icon: 'info', text: 'About' },
     { href: '/documentation', icon: 'documentation', text: 'Docs' },
     { href: '/support', icon: 'support', text: 'Support' },
-    { href: '/buy', icon: 'buy', text: 'Purchase' }
+    { href: '/pricing', icon: 'buy', text: 'Pricing' },
+    { href: '/userDashboard', icon: 'dashboard', text: 'Dashboard' }
   ];
 
   const isActive = (href: string) => pathname === href;
@@ -71,7 +74,7 @@ export default function Header({ theme, setTheme }: HeaderProps) {
             <ul className="flex space-x-1">
               {navItems.map((item) => (
                 <li key={item.href}>
-                  {item.href === '/buy' || item.href === '/support' ? (
+                  { item.href === '/support' ? (
                     <>
                       {user && (
                         <Link
